@@ -21,6 +21,10 @@ android {
         }
     }
 
+    sourceSets {
+        androidTest.manifest.srcFile "src/androidTest/AndroidManifest.xml"
+    }
+
     adbOptions {
         installOptions '-g', '-r'
     }
@@ -76,6 +80,7 @@ def embedScreenshotsTask = task('embedScreenshots', group: 'reporting') {
 }
 
 def clearScreenshotsTask = task('clearScreenshots', type: Exec) {
+    println("clear")
     executable "${android.getAdbExe().toString()}"
     args 'shell', 'rm', '-r', '/sdcard/Pictures/my_app_folder'
     finalizedBy {
@@ -85,6 +90,7 @@ def clearScreenshotsTask = task('clearScreenshots', type: Exec) {
 
 def createScreenshotDirectoryTask = task('createScreenshotDirectory', type: Exec, group: 'reporting') {
     executable "${android.getAdbExe().toString()}"
+    println("create")
     args 'shell', 'mkdir', '-p', '/sdcard/Pictures/my_app_folder'
 }
 
@@ -106,6 +112,7 @@ def fetchScreenshotsTask = task('fetchScreenshots', type: Exec, group: 'reportin
 
 tasks.whenTaskAdded { task ->
     if (task.name == 'connectedDebugAndroidTest') {
+        println("doing the thing")
         task.finalizedBy {
             fetchScreenshotsTask
         }

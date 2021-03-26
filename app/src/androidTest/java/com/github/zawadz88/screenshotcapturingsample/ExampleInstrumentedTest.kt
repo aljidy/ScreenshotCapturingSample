@@ -1,13 +1,16 @@
 package com.github.zawadz88.screenshotcapturingsample
 
+import android.Manifest
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
+import android.support.test.rule.GrantPermissionRule
 import android.support.test.runner.AndroidJUnit4
 import com.github.zawadz88.screenshotcapturingsample.util.ScreenshotTakingRule
+import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
@@ -23,11 +26,19 @@ class ExampleInstrumentedTest {
 
     val activityRule = ActivityTestRule(MainActivity::class.java, true, false)
 
+    companion object {
+        @ClassRule
+        @JvmField
+        val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    }
+
+
     @JvmField
     @Rule
     val ruleChain: RuleChain = RuleChain
         .outerRule(activityRule)
         .around(ScreenshotTakingRule())
+        .around(grantPermissionRule)
 
     @Test
     fun clickingFabShouldShowEmailSentMessage() {
